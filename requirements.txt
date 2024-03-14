@@ -1,5 +1,5 @@
 pytest
-flake8
+flake8==3.7.9
 flake8-builtins
 flake8-pytest
 pylint
