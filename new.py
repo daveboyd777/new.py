@@ -17,7 +17,8 @@ from typing import NamedTuple, Optional, TextIO
 
 
 class Args(NamedTuple):
-    """ Command-line arguments """
+    """Command-line arguments"""
+
     program: str
     name: str
     email: str
@@ -28,109 +29,115 @@ class Args(NamedTuple):
 
 # --------------------------------------------------
 def get_args() -> Args:
-    """ Get arguments """
+    """Get arguments"""
 
     parser = argparse.ArgumentParser(
-        prog='new.py',
-        description='Create Python argparse program',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        prog="new.py",
+        description="Create Python argparse program",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
 
-    rc_file = os.path.join(str(Path.home()), '.new.py')
+    rc_file = os.path.join(str(Path.home()), ".new.py")
     defaults = get_defaults(open(rc_file) if os.path.isfile(rc_file) else None)
-    username = os.getenv('USER') or 'Anonymous'
-    hostname = os.getenv('HOSTNAME') or 'localhost'
+    username = os.getenv("USER") or "Anonymous"
+    hostname = os.getenv("HOSTNAME") or "localhost"
 
-    parser.add_argument('program', help='Program name', type=str)
+    parser.add_argument("program", help="Program name", type=str)
 
-    parser.add_argument('-n',
-                        '--name',
-                        type=str,
-                        default=defaults.get('name', username),
-                        help='Name for docstring')
+    parser.add_argument(
+        "-n",
+        "--name",
+        type=str,
+        default=defaults.get("name", username),
+        help="Name for docstring",
+    )
 
-    parser.add_argument('-e',
-                        '--email',
-                        type=str,
-                        default=defaults.get('email',
-                                             f'{username}@{hostname}'),
-                        help='Email for docstring')
+    parser.add_argument(
+        "-e",
+        "--email",
+        type=str,
+        default=defaults.get("email", f"{username}@{hostname}"),
+        help="Email for docstring",
+    )
 
-    parser.add_argument('-p',
-                        '--purpose',
-                        type=str,
-                        default=defaults.get('purpose', 'Rock the Casbah'),
-                        help='Purpose for docstring')
+    parser.add_argument(
+        "-p",
+        "--purpose",
+        type=str,
+        default=defaults.get("purpose", "Rock the Casbah"),
+        help="Purpose for docstring",
+    )
 
-    parser.add_argument('-t',
-                        '--write_test',
-                        help='Create basic test.py',
-                        action='store_true')
+    parser.add_argument(
+        "-t", "--write_test", help="Create basic test.py", action="store_true"
+    )
 
-    parser.add_argument('-f',
-                        '--force',
-                        help='Overwrite existing',
-                        action='store_true')
+    parser.add_argument("-f", "--force", help="Overwrite existing", action="store_true")
 
     args = parser.parse_args()
 
-    args.program = args.program.strip().replace('-', '_')
+    args.program = args.program.strip().replace("-", "_")
 
     if not args.program:
         parser.error(f'Not a usable filename "{args.program}"')
 
-    return Args(program=args.program,
-                name=args.name,
-                email=args.email,
-                purpose=args.purpose,
-                overwrite=args.force,
-                write_test=args.write_test)
+    return Args(
+        program=args.program,
+        name=args.name,
+        email=args.email,
+        purpose=args.purpose,
+        overwrite=args.force,
+        write_test=args.write_test,
+    )
 
 
 # --------------------------------------------------
 def main() -> None:
-    """ Make a jazz noise here """
+    """Make a jazz noise here"""
 
     args = get_args()
     program = args.program
 
     if os.path.isfile(program) and not args.overwrite:
         answer = input(f'"{program}" exists.  Overwrite? [yN] ')
-        if not answer.lower().startswith('y'):
-            sys.exit('Will not overwrite. Bye!')
+        if not answer.lower().startswith("y"):
+            sys.exit("Will not overwrite. Bye!")
 
-    print(body(args), file=open(program, 'wt'), end='')
+    print(body(args), file=open(program, "wt"), end="")
 
-    if platform.system() != 'Windows':
-        subprocess.run(['chmod', '+x', program], check=True)
+    if platform.system() != "Windows":
+        subprocess.run(["chmod", "+x", program], check=True)
 
     if args.write_test:
-        test_dir = os.path.join(os.getcwd(), 'tests')
+        test_dir = os.path.join(os.getcwd(), "tests")
         if not os.path.isdir(test_dir):
             os.makedirs(test_dir)
 
-        basename = os.path.splitext(args.program)[0] + '_test.py'
+        basename = os.path.splitext(args.program)[0] + "_test.py"
         test_file = os.path.join(test_dir, basename)
         if os.path.isfile(test_file):
             print(f'Will not overwrite "{test_file}"!')
         else:
-            print(text_test(args.program), file=open(test_file, 'wt'))
+            print(text_test(args.program), file=open(test_file, "wt"))
 
         makefile_text = [
-            '.PHONY: test', '', 'test:',
-            '\tpython3 -m pytest -xv --flake8 --pylint'
+            ".PHONY: test",
+            "",
+            "test:",
+            "\tpython3 -m pytest -xv --flake8 --pylint",
         ]
-        makefile = 'Makefile'
+        makefile = "Makefile"
         if os.path.isfile(makefile):
             print(f'Will not overwrite "{makefile}"!')
         else:
-            print('\n'.join(makefile_text), file=open('Makefile', 'wt'))
+            print("\n".join(makefile_text), file=open("Makefile", "wt"))
 
     print(f'Done, see new script "{program}".')
 
 
 # --------------------------------------------------
 def body(args: Args) -> str:
-    """ The program template """
+    """The program template"""
 
     today = str(date.today())
 
@@ -223,7 +230,7 @@ if __name__ == '__main__':
 
 # --------------------------------------------------
 def text_test(prg) -> str:
-    """ Template for test.py """
+    """Template for test.py"""
 
     tmpl = """\
 \"\"\" Tests \"\"\"
@@ -265,12 +272,12 @@ def test_ok():
 
 # --------------------------------------------------
 def get_defaults(file_handle: Optional[TextIO]):
-    """ Get defaults from ~/.new.py """
+    """Get defaults from ~/.new.py"""
 
     defaults = {}
     if file_handle:
         for line in file_handle:
-            match = re.match('([^=]+)=([^=]+)', line)
+            match = re.match("([^=]+)=([^=]+)", line)
             if match:
                 key, val = map(str.strip, match.groups())
                 if key and val:
@@ -280,5 +287,5 @@ def get_defaults(file_handle: Optional[TextIO]):
 
 
 # --------------------------------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

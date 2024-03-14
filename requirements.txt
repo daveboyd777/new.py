@@ -4,3 +4,4 @@ flake8-builtins
 flake8-pytest
 pylint
 pytest-pylint
+pytest-flake8
