@@ -5,21 +5,25 @@ import io
 import os
 import random
 import string
+from pathlib import Path
 from subprocess import getstatusoutput
 from shutil import rmtree
-from new import get_defaults
-import random
-import string
+
 from new import get_defaults
 
 PRG = "./new.py"
 
 
 # --------------------------------------------------
+
+
 def test_exists():
     """Program exists"""
 
     assert os.path.isfile(PRG)
+
+
+# --------------------------------------------------
 
 
 # --------------------------------------------------
@@ -29,7 +33,7 @@ def test_get_defaults():
     expected = {random_string(): random_string() for _ in range(random.randint(3, 7))}
     text = io.StringIO("\n".join(f"{k}={v}" for k, v in expected.items()))
     assert get_defaults(text) == expected
-    assert get_defaults(None) == {}
+    assert not get_defaults(None)
 
 
 # --------------------------------------------------
@@ -37,7 +41,9 @@ def test_usage():
     """Prints usage"""
 
     for flag in ["-h", "--help"]:
-        retval, out = getstatusoutput(f"{PRG} {flag}")
+        prg_path = Path("./new.py").resolve()
+        retval, out = getstatusoutput(f"'{prg_path}' {flag}")
+        print(out)
         assert retval == 0
         assert out.lower().startswith("usage")
 
