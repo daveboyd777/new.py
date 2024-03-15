@@ -32,12 +32,12 @@ def get_args() -> Args:
     """Get arguments"""
 
     parser = argparse.ArgumentParser(
-        prog="new.py",
+        prog="./new.py",
         description="Create Python argparse program",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
-    rc_file = os.path.join(str(Path.home()), ".new.py")
+    rc_file = os.path.join(str(Path.home()), ".")
     with open(rc_file, encoding="utf-8") as file_handle:
         defaults = get_defaults(file_handle)
     username = os.getenv("USER") or "Anonymous"
