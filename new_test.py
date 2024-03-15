@@ -8,6 +8,9 @@ import string
 from subprocess import getstatusoutput
 from shutil import rmtree
 from new import get_defaults
+import random
+import string
+from new import get_defaults
 
 PRG = "./new.py"
 
