@@ -25,6 +25,7 @@ def test_pytest_config(pytestconfig):
         pytestconfig: The pytest configuration object.
 
     Returns:
+        None
     """
     dbg = False
     if dbg:
