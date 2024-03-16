@@ -16,6 +16,21 @@ from pathlib import Path
 from typing import NamedTuple, Optional, TextIO
 
 
+# --------------------------------------------------
+def test_pytest_config(pytestconfig):
+    """
+    Prints the path to the pytest configuration file.
+
+    Args:
+        pytestconfig: The pytest configuration object.
+
+    Returns:
+    """
+    dbg = False
+    if dbg:
+        print("pytestconfig.inifile:", pytestconfig.inifile)
+
+
 class Args(NamedTuple):
     """Command-line arguments"""
 
@@ -28,6 +43,8 @@ class Args(NamedTuple):
 
 
 # --------------------------------------------------
+
+
 def get_args() -> Args:
     """Get arguments"""
 
@@ -98,7 +115,7 @@ def main() -> None:
 
     args = get_args()
     program = args.program
-
+    # print("test_pytest_config:", test_pytest_config)
     if os.path.isfile(program) and not args.overwrite:
         answer = input(f'"{program}" exists.  Overwrite? [yN] ')
         if not answer.lower().startswith("y"):
@@ -225,7 +242,6 @@ def main() -> None:
     print(f'flag_arg = "{{flag_arg}}"')
     print(f'positional = "{{pos_arg}}"')
 
-
 # --------------------------------------------------
 if __name__ == '__main__':
     main()
@@ -233,6 +249,8 @@ if __name__ == '__main__':
 
 
 # --------------------------------------------------
+
+
 def text_test(prg) -> str:
     """Template for test.py"""
 

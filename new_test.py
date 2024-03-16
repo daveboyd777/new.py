@@ -9,17 +9,34 @@ from pathlib import Path
 from subprocess import getstatusoutput
 from shutil import rmtree
 
+# from pytest import Config
+
 from new import get_defaults
 
 PRG = "./new.py"
 
 
 # --------------------------------------------------
+"""
+def test_pytest_config(pytestconfig):
+
+    Prints the path to the pytest configuration file.
+
+    Args:
+        pytestconfig: The pytest configuration object.
+
+    Returns:
+        None
+
+
+    dbg = False
+    if dbg:
+        print("pytestconfig.inifile:", pytestconfig.inifile)
+"""
 
 
 def test_exists():
     """Program exists"""
-
     assert os.path.isfile(PRG)
 
 
